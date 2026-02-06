@@ -38,6 +38,7 @@ export const useApiKeyStore = create(
             if (currentSearch) {
               params.search = currentSearch;
             }
+            console.log(params);
 
             const response = await axiosInstance.get("/api", { params });
 

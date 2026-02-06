@@ -30,9 +30,6 @@ const ApiKeys = () => {
     showExpiration: false,
   });
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-
   const {
     apiKeys,
     loading,
@@ -40,12 +37,15 @@ const ApiKeys = () => {
     fetchApiKeys,
     createApiKey,
     revokeApiKey,
-    regenerateApiKey,
     deleteApiKey,
     setCurrentFilterStatus,
     setCurrentSearch,
+    currentSearch,
     changePage,
   } = useApiKeyStore();
+
+  const [searchQuery, setSearchQuery] = useState(currentSearch || "");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
     fetchApiKeys(currentPageFromUrl);
@@ -102,17 +102,6 @@ const ApiKeys = () => {
       message: `Are you sure you want to permanently delete "${keyName}"? This action cannot be undone.`,
       onConfirm: async () => {
         await deleteApiKey(keyId);
-      },
-    });
-  };
-
-  const handleRegenerateKey = (keyId, keyName) => {
-    setConfirmModal({
-      isOpen: true,
-      title: "Regenerate API Key",
-      message: `Are you sure you want to regenerate "${keyName}"? The old key will be immediately invalidated and cannot be recovered.`,
-      onConfirm: async () => {
-        await regenerateApiKey(keyId);
       },
     });
   };
@@ -188,7 +177,6 @@ const ApiKeys = () => {
                   apiKey={key}
                   onRevoke={handleRevokeKey}
                   onDelete={handleDeleteKey}
-                  onRegenerate={handleRegenerateKey}
                 />
               ))}
             </div>
